@@ -123,19 +123,20 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     applyFilterButton.addEventListener('click', function () {  
-        var searchValue = filterInput.value;
-        filteredMovies = filterMovies(moviesData, searchValue);
+        const searchTerm = filterInput.value.trim().toLowerCase();
+        filteredMovies = filterMovies(moviesData, searchTerm);
         currentIndex = 0;
         loadMovies(filteredMovies);
+        closeMovieInfo();
         updateArrowVisibility();
     });
     
     clearFilterButton.addEventListener('click', function () {
         filterInput.value = "";
-        var searchValue = filterInput.value;
-        filteredMovies = filterMovies(moviesData, searchValue);
+        filteredMovies = moviesData;
         currentIndex = 0;
         loadMovies(filteredMovies);
+        closeMovieInfo();
         updateArrowVisibility();
     });
 
@@ -200,12 +201,15 @@ document.addEventListener('DOMContentLoaded', function () {
         movieInfoContainer.style.display = 'block';
     }
 
+    function closeMovieInfo() {
+        movieInfoContainer.style.display = 'none';
+    }
+
     window.playMovie = function (videoUrl) {
 
         //Redirigir a la página de reproducción con el enlace del video
         window.location.href = `playback.html?videoUrl=${encodeURIComponent(videoUrl)}`;
     }
-    
 
     //Sistema de carrusel
     function scrollCarousel(direction) {
@@ -235,4 +239,5 @@ document.addEventListener('DOMContentLoaded', function () {
             return movie.title.toLowerCase().includes(searchTerm.toLowerCase());
         });
     }
+
 });
