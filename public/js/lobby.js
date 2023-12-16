@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const username = localStorage.getItem('username');
 
     if (!username) {
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     }
 
     //Coleccion de peliculas -> Prueba sin backend
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     logoutButton.addEventListener('click', function () {
         localStorage.removeItem('username');
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     });
 
     applyFilterButton.addEventListener('click', function () {  
