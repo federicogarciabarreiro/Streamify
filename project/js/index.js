@@ -1,27 +1,27 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import 'firebase/firestore'; // Asegúrate de importar Firestore
+import 'firebase/firestore';
 
 import firebaseConfig from './firebaseConfig';
 
-// Inicializa Firebase
+//Inicializa Firebase
 firebase.initializeApp(firebaseConfig);
 
-// Observador de autenticación para manejar cambios de estado
+//Observador de autenticación para manejar cambios de estado
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
-    // El usuario está autenticado, redirigir a la página del lobby
+    //El usuario está autenticado, redirigir a la página del lobby
     window.location.href = 'lobby.html';
   }
 });
 
-// Función para establecer el estado de Firebase
+//Función para establecer el estado de Firebase
 function setFirebaseStatus(online) {
   const statusElement = document.getElementById('firebase-status');
   statusElement.textContent = `Firebase: ${online ? 'Conectado (Online)' : 'Desconectado (Offline)'}`;
 }
 
-// Observador de conexión a Firebase (Firestore)
+//Observador de conexión a Firebase (Firestore)
 firebase.firestore().enableNetwork().then(function () {
   console.log('Firebase en línea');
   setFirebaseStatus(true);
