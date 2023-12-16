@@ -9,12 +9,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (username) {
         usernamePlaceholder.textContent = username;
     } else {
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
     }
 
     logoutButton.addEventListener('click', function () {
         localStorage.removeItem('username');
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
     });
 
     gotoLobbyButton.addEventListener('click', function () {
