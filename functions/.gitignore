@@ -403,3 +403,4 @@ functions/node_modules
 functions/.runtimeconfig.json
 .firebaserc
 firebase.json
+firebaseConfig.js
