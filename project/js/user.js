@@ -1,19 +1,21 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const usernamePlaceholder = document.getElementById('username-placeholder');
     const logoutButton = document.getElementById('logout-button');
     const gotoLobbyButton = document.getElementById('goto-lobby-button');
 
-    //Obtener nombre de usuario desde almacenamiento (localStorage) -> Prueba sin backend
-    const username = localStorage.getItem('username');
+    //Obtener nombre de usuario desde almacenamiento
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-    if (username) {
-        usernamePlaceholder.textContent = username;
-    } else {
+    console.log(currentUser);
+
+    if (currentUser) {
+        const username = currentUser.email;
+        document.getElementById('usernamePlaceholder').textContent = username;
+      } else {
         window.location.href = 'index.html';
-    }
+      }
 
     logoutButton.addEventListener('click', function () {
-        localStorage.removeItem('username');
+        localStorage.removeItem('currentUser');
         window.location.href = 'index.html';
     });
 

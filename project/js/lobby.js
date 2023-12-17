@@ -9,102 +9,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const applyFilterButton = document.getElementById('apply-filter-button');
     const clearFilterButton = document.getElementById('clear-filter-button');
 
-    const username = localStorage.getItem('username');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) window.location.href = 'index.html';
 
-    if (!username) {
-        window.location.href = 'index.html';
-    }
+    const db = firebase.firestore();
+    const moviesRef = db.collection('movies');
 
-    //Coleccion de peliculas -> Prueba sin backend
-    const moviesData = [
-    {
-        id: 1,
-        title: 'Aventuras en el Espacio',
-        type: 'Ciencia Ficción',
-        description: 'Una emocionante aventura intergaláctica.',
-        image: 'https://via.placeholder.com/200x300',
-        videoUrl: 'https://www.youtube.com/watch?v=videoid1'
-    },
-    {
-        id: 2,
-        title: 'El Misterio del Tiempo',
-        type: 'Misterio',
-        description: 'Viajes en el tiempo y secretos por descubrir.',
-        image: 'https://via.placeholder.com/200x300',
-        videoUrl: 'https://www.youtube.com/watch?v=videoid2'
-    },
-    {
-        id: 3,
-        title: 'Risas en la Ciudad',
-        type: 'Comedia',
-        description: 'Divertidas situaciones en la vida urbana.',
-        image: 'https://via.placeholder.com/200x300',
-        videoUrl: 'https://www.youtube.com/watch?v=videoid3'
-    },
-    {
-        id: 4,
-        title: 'El Misterio del Bosque Encantado',
-        type: 'Fantasía',
-        description: 'Criaturas mágicas y un bosque lleno de secretos.',
-        image: 'https://via.placeholder.com/200x300',
-        videoUrl: 'https://www.youtube.com/watch?v=videoid4'
-    },
-    {
-        id: 5,
-        title: 'Intriga en la Montaña',
-        type: 'Suspense',
-        description: 'Una historia llena de giros y suspense en la montaña.',
-        image: 'https://via.placeholder.com/200x300',
-        videoUrl: 'https://www.youtube.com/watch?v=videoid5'
-    },
-    {
-        id: 6,
-        title: 'Amor en París',
-        type: 'Romance',
-        description: 'Una historia romántica ambientada en la hermosa ciudad de París.',
-        image: 'https://via.placeholder.com/200x300',
-        videoUrl: 'https://www.youtube.com/watch?v=videoid6'
-    },
-    {
-        id: 7,
-        title: 'El Último Guerrero',
-        type: 'Acción',
-        description: 'Épicas batallas y un héroe destinado a cambiar el destino.',
-        image: 'https://via.placeholder.com/200x300',
-        videoUrl: 'https://www.youtube.com/watch?v=videoid7'
-    },
-    {
-        id: 8,
-        title: 'Rumores en el Pueblo',
-        type: 'Drama',
-        description: 'Secretos y conflictos en un pequeño pueblo.',
-        image: 'https://via.placeholder.com/200x300',
-        videoUrl: 'https://www.youtube.com/watch?v=videoid8'
-    },
-    {
-        id: 9,
-        title: 'Desafío en el Desierto',
-        type: 'Aventura',
-        description: 'Una travesía llena de desafíos en el vasto desierto.',
-        image: 'https://via.placeholder.com/200x300',
-        videoUrl: 'https://www.youtube.com/watch?v=videoid9'
-    },
-    {
-        id: 10,
-        title: 'La Isla Perdida',
-        type: 'Aventura',
-        description: 'Exploración y misterios en una isla remota.',
-        image: 'https://via.placeholder.com/200x300',
-        videoUrl: 'https://www.youtube.com/watch?v=videoid10'
-    }];
+    moviesRef.get().then(snapshot => {
+        const moviesData = [];
+        snapshot.forEach(doc => {
+            const movie = doc.data();
+            moviesData.push(movie);
+        });
 
-    let currentIndex = 0;
-    var filteredMovies = moviesData;
-    loadMovies(filteredMovies);
-    updateArrowVisibility();
+        let currentIndex = 0;
+        let filteredMovies = moviesData;
+        loadMovies(filteredMovies);
+        updateArrowVisibility();
 
-    //Sistema de botones
 
+    // Sistema de botones
     prevButton.addEventListener('click', function () {
         scrollCarousel(-1);
     });
@@ -118,11 +42,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     logoutButton.addEventListener('click', function () {
-        localStorage.removeItem('username');
+        localStorage.removeItem('currentUser');
         window.location.href = 'index.html';
     });
 
-    applyFilterButton.addEventListener('click', function () {  
+    applyFilterButton.addEventListener('click', function () {
         const searchTerm = filterInput.value.trim().toLowerCase();
         filteredMovies = filterMovies(moviesData, searchTerm);
         currentIndex = 0;
@@ -130,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
         closeMovieInfo();
         updateArrowVisibility();
     });
-    
+
     clearFilterButton.addEventListener('click', function () {
         filterInput.value = "";
         filteredMovies = moviesData;
@@ -239,5 +163,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return movie.title.toLowerCase().includes(searchTerm.toLowerCase());
         });
     }
+
+    }).catch(error => {
+        console.error('Error al obtener datos de la colección:', error);
+    });
 
 });

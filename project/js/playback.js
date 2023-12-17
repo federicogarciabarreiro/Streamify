@@ -2,6 +2,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const videoPlayer = document.getElementById('movie-player');
     const backToLobbyButton = document.getElementById('back-to-lobby');
 
+    //Obtener nombre de usuario desde almacenamiento
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (!currentUser) {
+        window.location.href = 'index.html';
+    }
+
     //Obtener el enlace del video de la URL
     const params = new URLSearchParams(window.location.search);
     const videoUrl = params.get('videoUrl');

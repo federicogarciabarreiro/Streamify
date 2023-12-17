@@ -1,50 +1,37 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Login + Firebase Database</title>
-
-         <!-- Google Fonts -->
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&display=swap" rel="stylesheet">
-
-        <link rel="stylesheet" type="text/css" href="css/index.css">
-    </head>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Streamify - Inicio de sesión</title>
+</head>
+<body>
+    <header>
+        <h1>Streamify</h1>
+    </header>
     
-    <body>
-        <div id="content_container">
-            <div id="form_container">
-                <div id="form_header_container">
-                    <h2 id="form_header"> Streamify: Login + Firebase Database </h2>
-                </div>
+    <!-- Formulario de inicio de sesión -->
+    <section id="login-section">
+        <form id="login-form">
+            <label for="email">Correo electrónico:</label>
+            <input type="email" id="email" name="email" required>
 
-                <div id="form_content_container">
-                    <div id="form_content_inner_container">
-                        <input type="text" id="full_name" placeholder="Full name">
-                        <input type="email" id="email" placeholder="Email">
-                        <input type="password" id="password" placeholder="New Password">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
 
-                        <input type="text" id="favourite_song" placeholder="The Best Song Ever">
-                        <input type="text" id="milk_before_cereal" placeholder="Milk Before Cereal? ( Yes | No )">
+            <button type="button" onclick="login()">Iniciar sesión</button>
+        </form>
+        <p id="login-message"></p>
+    </section>
 
-                        <div id="button_container">
-                            <button onclick="login()">Login</button>
-                            <button onclick="register()">Register</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
-
-    <script src="js\firebaseConfig.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
-    <script src="js\index.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 
+    <script src="js\firebaseConfig.js"></script>
+
+    <script src="js/index.js"></script>
+</body>
 </html>

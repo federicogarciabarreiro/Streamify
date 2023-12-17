@@ -1,31 +1,87 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const registerForm = document.getElementById('register-form');
-    const registerMessage = document.getElementById('register-message');
-  
-    registerForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-  
-      const email = event.target.email.value;
-      const password = event.target.password.value;
-  
-      //Crear un nuevo usuario con Firebase
-      firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
+const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+if (currentUser) window.location.href = 'lobby.html';
 
-          //Registro exitoso, el usuario está autenticado
-          const user = userCredential.user;
-          console.log('Nuevo usuario registrado:', user);
+const auth = firebase.auth();
+
+console.log('auth obtenido:', auth);
+console.log('database obtenido:', database);
+
+//Funcion de registro
+function register () {
+
+  //Ingreso de datos
+  email = document.getElementById('email').value
+  password = document.getElementById('password').value
+  full_name = document.getElementById('full_name').value
+
+  // Validacion
+  if (validate_email(email) == false || validate_password(password) == false) {
+    alert('Correo electronico o contraseña incorrectos.')
+    return
+  }
+  if (validate_field(full_name) == false) {
+    alert('Uno o mas campos estan incorrectos o incompletos.')
+    return
+  }
+ 
+  //Crear usuario
+  auth.createUserWithEmailAndPassword(email, password)
+  .then(function() {
+
+    var user = auth.currentUser
+    var database_ref = database.ref()
+
+    var user_data = {
+      email : email,
+      full_name : full_name,
+      last_login : Date.now()
+    }
+
+    database_ref.child('users/' + user.uid).set(user_data)
+
+    alert('Usuario creado.')
+
+    window.location.href = 'index.html';
+
+  })
+  .catch(function(error) {
+    var error_code = error.code
+    var error_message = error.message
+
+    alert(error_message)
+  })
   
-          //Redirige a la página del lobby
-          window.location.href = 'lobby.html?login=success';
-        })
-        .catch((error) => {
-          //Error en el registro
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error('Error en el registro:', errorCode, errorMessage);
-          registerMessage.textContent = 'Error en el registro. Inténtalo de nuevo.';
-        });
-    });
-  });
-  
+
+//Validar correo electronico.
+function validate_email(email) {
+  expression = /^[^@]+@\w+(\.\w+)+\w$/
+  if (expression.test(email) == true) {
+    return true
+  } else {
+    return false
+  }
+}
+
+//Validar contraseña.
+function validate_password(password) {
+  if (password < 6) {
+    return false
+  } else {
+    return true
+  }
+}
+
+//Validar campos.
+function validate_field(field) {
+  if (field == null) {
+    return false
+  }
+
+  if (field.length <= 0) {
+    return false
+  } else {
+    return true
+  }
+}
+
+}
