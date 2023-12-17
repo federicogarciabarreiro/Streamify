@@ -1,79 +1,126 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+if (typeof window.firebaseConfig === 'undefined') {
+  console.error('window.firebaseConfig no está definido. Asegúrate de incluir firebaseConfig.js correctamente.');
+} else {
+  // Inicializar Firebase
+  firebase.initializeApp(window.firebaseConfig);
 
-import firebaseConfig from './firebaseConfig';
+  const auth = firebase.auth();
+  const database = firebase.database();
 
-//Inicializa Firebase
-firebase.initializeApp(firebaseConfig);
+//Funcion de registro
+function register () {
 
-//Observador de autenticación para manejar cambios de estado
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
-    //El usuario está autenticado, redirigir a la página del lobby
-    window.location.href = 'lobby.html';
+  //Ingreso de datos
+  email = document.getElementById('email').value
+  password = document.getElementById('password').value
+  full_name = document.getElementById('full_name').value
+  favourite_song = document.getElementById('favourite_song').value
+  milk_before_cereal = document.getElementById('milk_before_cereal').value
+
+  // Validacion
+  if (validate_email(email) == false || validate_password(password) == false) {
+    alert('Correo electronico o contraseña incorrectos.')
+    return
   }
-});
+  if (validate_field(full_name) == false || validate_field(favourite_song) == false || validate_field(milk_before_cereal) == false) {
+    alert('Uno o mas campos estan incorrectos o incompletos.')
+    return
+  }
+ 
+  //Crear usuario
+  auth.createUserWithEmailAndPassword(email, password)
+  .then(function() {
 
-//Función para establecer el estado de Firebase
-function setFirebaseStatus(online) {
-  const statusElement = document.getElementById('firebase-status');
-  statusElement.textContent = `Firebase: ${online ? 'Conectado (Online)' : 'Desconectado (Offline)'}`;
+    var user = auth.currentUser
+    var database_ref = database.ref()
+
+    var user_data = {
+      email : email,
+      full_name : full_name,
+      favourite_song : favourite_song,
+      milk_before_cereal : milk_before_cereal,
+      last_login : Date.now()
+    }
+
+    database_ref.child('users/' + user.uid).set(user_data)
+
+    alert('Usuario creado.')
+  })
+  .catch(function(error) {
+    var error_code = error.code
+    var error_message = error.message
+
+    alert(error_message)
+  })
 }
 
-//Observador de conexión a Firebase (Firestore)
-firebase.firestore().enableNetwork().then(function () {
-  console.log('Firebase en línea');
-  setFirebaseStatus(true);
-}).catch(function () {
-  console.log('Firebase desconectado');
-  setFirebaseStatus(false);
-});
+//Login
+function login () {
 
-document.addEventListener('DOMContentLoaded', function () {
-  const loginForm = document.getElementById('login-form');
-  const loginMessage = document.getElementById('login-message');
-  const recoverButton = document.getElementById('recover-button');
+  //Ingreso de datos
+  email = document.getElementById('email').value
+  password = document.getElementById('password').value
 
-  loginForm.addEventListener('submit', function (event) {
-    event.preventDefault();
+  // Validar
+  if (validate_email(email) == false || validate_password(password) == false) {
+    alert('Correo electronico o contraseña incorrectos.')
+    return
+  }
 
-    const enteredUsername = event.target.username.value;
-    const enteredPassword = event.target.password.value;
+  //Autenticar usuario
+  auth.signInWithEmailAndPassword(email, password)
+  .then(function() {
 
-    // Autenticar con Firebase
-    firebase.auth().signInWithEmailAndPassword(enteredUsername, enteredPassword)
-      .then((userCredential) => {
-        // Autenticación exitosa, el usuario está autenticado
-        const user = userCredential.user;
-        console.log('Usuario autenticado:', user);
+    var user = auth.currentUser
 
-        // Redirigir a la página del lobby
-        window.location.href = 'lobby.html?login=success';
-      })
-      .catch((error) => {
-        // Error de autenticación
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error('Error de autenticación:', errorCode, errorMessage);
-        loginMessage.textContent = 'Credenciales incorrectas. Inténtalo de nuevo.';
-      });
-  });
+    var database_ref = database.ref()
 
-  recoverButton.addEventListener('click', function () {
-    // Abre el formulario de recuperación de contraseña de Firebase
-    const email = prompt('Ingresa tu correo electrónico para recuperar la contraseña:');
-
-    if (email) {
-      // Envía el correo de recuperación de contraseña
-      firebase.auth().sendPasswordResetEmail(email)
-        .then(() => {
-          alert('Se ha enviado un correo de recuperación de contraseña. Revisa tu bandeja de entrada.');
-        })
-        .catch((error) => {
-          console.error('Error al enviar el correo de recuperación de contraseña:', error);
-          alert('Hubo un error al enviar el correo de recuperación de contraseña. Inténtalo de nuevo.');
-        });
+    var user_data = {
+      last_login : Date.now()
     }
-  });
-});
+
+    database_ref.child('users/' + user.uid).update(user_data)
+
+    alert('Loggin exitoso.')
+
+  })
+  .catch(function(error) {
+    var error_code = error.code
+    var error_message = error.message
+
+    alert(error_message)
+  })
+}
+
+//Validar correo electronico.
+function validate_email(email) {
+  expression = /^[^@]+@\w+(\.\w+)+\w$/
+  if (expression.test(email) == true) {
+    return true
+  } else {
+    return false
+  }
+}
+
+//Validar contraseña.
+function validate_password(password) {
+  if (password < 6) {
+    return false
+  } else {
+    return true
+  }
+}
+
+//Validar campos.
+function validate_field(field) {
+  if (field == null) {
+    return false
+  }
+
+  if (field.length <= 0) {
+    return false
+  } else {
+    return true
+  }
+}
+} 
