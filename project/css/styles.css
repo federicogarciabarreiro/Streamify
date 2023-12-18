@@ -1,13 +1,14 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #111;
+    box-sizing: border-box;
+    background-color: #121212;
     color: #fff;
     font-family: 'Arial', sans-serif;
 }
 
 header {
-    background-color: #333;
+    background-color: #1E1E1E;
     color: #fff;
     text-align: center;
     padding: 1rem;
@@ -40,22 +41,22 @@ form input {
 
 button {
     padding: 0.5rem;
-    background-color: #333;
+    background-color: #1E1E1E;
     color: #fff;
     border: none;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #555;
+    background-color: #333;
 }
 
 .card {
-    border: 1px solid #555;
+    border: 1px solid #333;
     border-radius: 8px;
     overflow: hidden;
     margin-right: 1rem;
-    background-color: #333;
+    background-color: #1E1E1E;
     color: #fff;
     cursor: pointer;
     width: 150px;
@@ -123,5 +124,3 @@ button:hover {
         width: 100%;
     }
 }
-
-

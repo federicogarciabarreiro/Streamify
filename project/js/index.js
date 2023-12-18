@@ -2,6 +2,7 @@ const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 if (currentUser) window.location.href = 'lobby.html';
 
 const auth = firebase.auth();
+const database = firebase.database();
 
 console.log('auth obtenido:', auth);
 console.log('database obtenido:', database);
@@ -13,7 +14,7 @@ function login () {
   email = document.getElementById('email').value
   password = document.getElementById('password').value
 
-  // Validar
+  //Validar
   if (validate_email(email) == false || validate_password(password) == false) {
     alert('Correo electronico o contraseña incorrectos.')
     return
@@ -35,7 +36,7 @@ function login () {
 
     database_ref.child('users/' + user.uid).update(user_data)
 
-    //Guarda el usuario autenticado en el almacenamiento local
+    //Guardar el usuario autenticado en el almacenamiento local
     localStorage.setItem('currentUser', JSON.stringify({
       email: email,
       last_login : user_data.last_login
@@ -68,7 +69,7 @@ function login () {
   console.error('auth no está definido. Asegúrate de inicializar Firebase correctamente.');
 }
 
-//Validar correo electronico.
+//Validar correo electronico
 function validate_email(email) {
   expression = /^[^@]+@\w+(\.\w+)+\w$/
   if (expression.test(email) == true) {
@@ -78,7 +79,7 @@ function validate_email(email) {
   }
 }
 
-//Validar contraseña.
+//Validar contraseña
 function validate_password(password) {
   if (password < 6) {
     return false
@@ -87,7 +88,7 @@ function validate_password(password) {
   }
 }
 
-//Validar campos.
+//Validar campos
 function validate_field(field) {
   if (field == null) {
     return false

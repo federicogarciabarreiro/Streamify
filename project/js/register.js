@@ -2,6 +2,7 @@ const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 if (currentUser) window.location.href = 'lobby.html';
 
 const auth = firebase.auth();
+const database = firebase.database();
 
 console.log('auth obtenido:', auth);
 console.log('database obtenido:', database);
@@ -52,7 +53,7 @@ function register () {
   })
   
 
-//Validar correo electronico.
+//Validar correo electronico
 function validate_email(email) {
   expression = /^[^@]+@\w+(\.\w+)+\w$/
   if (expression.test(email) == true) {
@@ -62,7 +63,7 @@ function validate_email(email) {
   }
 }
 
-//Validar contraseña.
+//Validar contraseña
 function validate_password(password) {
   if (password < 6) {
     return false
@@ -71,7 +72,7 @@ function validate_password(password) {
   }
 }
 
-//Validar campos.
+//Validar campos
 function validate_field(field) {
   if (field == null) {
     return false

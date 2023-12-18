@@ -28,7 +28,8 @@ document.addEventListener('DOMContentLoaded', function () {
         updateArrowVisibility();
 
 
-    // Sistema de botones
+    //Sistema de botones
+
     prevButton.addEventListener('click', function () {
         scrollCarousel(-1);
     });
@@ -71,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function renderMovies(movies) {
+        
         //Limpiar el carrusel
         carouselInner.innerHTML = '';
     
@@ -100,6 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
         card.appendChild(title);
 
         card.addEventListener('click', function () {
+            console.log(movie.videoFileName);
             showMovieInfo(movie);
         });
 
@@ -111,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <h2>${movie.title}</h2>
             <p><strong>Tipo:</strong> ${movie.type}</p>
             <p><strong>Descripción:</strong> ${movie.description}</p>
-            <button id="play-button" onclick="playMovie('${movie.videoUrl}')">Reproducir</button>
+            <button id="play-button" onclick="playMovie('${movie.videoFileName}')">Reproducir</button>
         `;
 
         const allCards = document.querySelectorAll('.card');
@@ -129,10 +132,10 @@ document.addEventListener('DOMContentLoaded', function () {
         movieInfoContainer.style.display = 'none';
     }
 
-    window.playMovie = function (videoUrl) {
+    window.playMovie = function (videoId) {
 
         //Redirigir a la página de reproducción con el enlace del video
-        window.location.href = `playback.html?videoUrl=${encodeURIComponent(videoUrl)}`;
+        window.location.href = `playback.html?videoId=${encodeURIComponent(videoId)}`;
     }
 
     //Sistema de carrusel

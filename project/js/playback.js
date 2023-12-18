@@ -1,27 +1,36 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const videoPlayer = document.getElementById('movie-player');
-    const backToLobbyButton = document.getElementById('back-to-lobby');
+const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+if (!currentUser) window.location.href = 'index.html'
 
-    //Obtener nombre de usuario desde almacenamiento
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+let videoId = '';
 
-    if (!currentUser) {
-        window.location.href = 'index.html';
-    }
+const params = new URLSearchParams(window.location.search);
 
-    //Obtener el enlace del video de la URL
-    const params = new URLSearchParams(window.location.search);
-    const videoUrl = params.get('videoUrl');
+videoId = params.get('videoId');
 
-    if (!videoUrl) {
-        //Si no se proporciona un enlace de video, redirige al lobby
-        window.location.href = 'lobby.html';
-    }
+console.log(videoId);
 
-    //Configurar el origen del video
-    videoPlayer.src = videoUrl;
+const storage = firebase.storage();
 
-    backToLobbyButton.addEventListener('click', function () {
-        window.location.href = 'lobby.html';
+console.log(storage);
+
+//Obtengo una referencia al archivo de video en Firebase Storage
+const videoRef = storage.ref('/movies/sample_' + videoId + '.mp4');
+
+//Obtengo la URL del archivo de video
+videoRef.getDownloadURL()
+    .then((url) => {
+
+        //Actualizo la fuente del reproductor de video con la URL del video en Firebase Storage
+        const videoPlayer = document.getElementById('videoPlayer');
+        console.log(url);
+        console.log(videoPlayer);
+        videoPlayer.src = url;
+        videoPlayer.style.width = '100%';
+    })
+    .catch((error) => {
+        console.error('Error al obtener la URL del video:', error);
     });
+
+document.getElementById('goto-lobby-button').addEventListener('click', function () {
+        window.location.href = 'lobby.html';
 });

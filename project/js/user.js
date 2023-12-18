@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const logoutButton = document.getElementById('logout-button');
     const gotoLobbyButton = document.getElementById('goto-lobby-button');
 
-    //Obtener nombre de usuario desde almacenamiento
+    //Obtengo nombre de usuario desde almacenamiento
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     console.log(currentUser);
